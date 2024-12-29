@@ -1,0 +1,192 @@
+@page
+@model PongStatTracker.Pages.SubmitStatsModel
+@{
+
+}
+
+<div class="submit-stats-page-container">
+    @if (Model.posted == true)
+    {
+        <div class="success-popup">
+            <div class="popup-content">
+                <h3>Success!</h3>
+                <p>Your stats have been submitted successfully</p>
+                <button onclick="window.location.href=window.location.href">OK</button>
+            </div>
+        </div>
+    }
+     <div class="submit-stats-container">
+        <div class="submit-stats-form">
+              <div class="stats-title-holder">
+                <h2 class="stats-title">Enter Your Stats!</h2>
+                <p class="stats-desc">Stats will be added to your profile. Make sure to enter them accurately.</p>
+              </div>
+              <div class="submit-stats-error-message">
+                <span asp-validation-for="Player"></span>
+                <span asp-validation-for="Opponent1"></span>
+                <span asp-validation-for="Opponent2"></span>
+                <span asp-validation-for="HitNum"></span>
+                <span asp-validation-for="SinkNum"></span>
+                <span asp-validation-for="MissNum"></span>
+                <span asp-validation-for="WinYN"></span>
+                <span class="stat-success-message" asp-validation-for="holder"></span>
+              </div>
+              <form method="post">
+
+                  <div class="dropdown-container">
+                  <div class="searchable">
+                    <input type="text" asp-for="Player" class="search-input" placeholder="Enter Your Name..." autocomplete="off"/> 
+                    <div class="search-results"></div>
+                  </div>
+                  <select class="search-select" data-selected="false">
+                    <option value="" disabled selected>Select a value</option>
+                      @for(int i = 0; i < Model.SearchResult.Count; i++){
+                        <option value=@Model.SearchResult[i].Name>@Model.SearchResult[i].Name</option> 
+                      }
+                  </select>
+                  </div>
+
+                  <div class="stat-number-holder">
+                    <input type="text" asp-for="SinkNum" placeholder="# Sinks..." autocomplete="off">
+                    <input type="text" asp-for="HitNum" placeholder="# Hits..." autocomplete="off">
+                    <input type="text" asp-for="MissNum" placeholder="# Misses..." autocomplete="off">
+                  </div>
+
+                  <div class="opponents-container">
+                    <div class="dropdown-container">
+                    <div class="searchable">
+                      <input type="text" asp-for="Opponent1"  class="search-input" placeholder="Enter Opponent 1..." autocomplete="off"/>
+                      <div class="search-results"></div>
+                    </div>
+                    <select class="search-select" data-selected="false">
+                      <option value="" disabled selected>Select a value</option>
+                        @for(int i = 0; i < Model.SearchResult.Count; i++){
+                          <option value=@Model.SearchResult[i].Name>@Model.SearchResult[i].Name</option> 
+                        } 
+                    </select>
+                    </div>
+
+                    <!-- Dropdown 2 -->
+                    <div class="dropdown-container">
+                      <div class="searchable">
+                        <input type="text" asp-for="Opponent2" class="search-input" placeholder="Enter Opponent 2..." autocomplete="off"/> 
+                        <div class="search-results"></div>
+                      </div>
+                      <select class="search-select" data-selected="false">
+                        <option value="" disabled selected>Select a value</option>
+                        @for(int i = 0; i < Model.SearchResult.Count; i++){
+                          <option value=@Model.SearchResult[i].Name>@Model.SearchResult[i].Name</option> 
+                        } 
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="win-loss-buttons">
+                    <label><input type="radio" asp-for="WinYN" value="Y">  Win</label>
+                    <label><input type="radio" asp-for="WinYN" value="N">  Loss</label>
+                  </div>
+
+                  <div class="submit-stats-button">
+                    <button type="submit">Submit</button>
+                  </div>
+              </form>
+        </div>
+        
+        <div class="submit-stats-image">
+          <img src="~/images/DkeHouse.jpg">
+        </div>
+     </div>
+</div>
+
+
+
+
+<script>
+    let currentOpenDropdown = null;  // Track currently open dropdown
+
+    function initializeDropdown(container) {
+      const searchField = container.querySelector('.search-input');
+      const resultsContainer = container.querySelector('.search-results');
+      const searchSelect = container.querySelector('.search-select');
+
+      const options = Array.from(searchSelect.options);
+
+      // Add form submit handler
+      const form = container.closest('form');
+      if (form) {
+        searchField.addEventListener('invalid', (e) => {
+          if (searchSelect.dataset.selected !== "true") {
+            e.target.setCustomValidity("Please select a value from the dropdown list");
+          }
+        });
+
+        searchField.addEventListener('input', () => {
+          searchField.setCustomValidity("");
+          searchSelect.dataset.selected = "false";
+          filterOptions();
+        });
+      }
+
+      function populateResults() {
+        // Close any other open dropdown
+        if (currentOpenDropdown && currentOpenDropdown !== resultsContainer) {
+          currentOpenDropdown.style.display = 'none';
+        }
+        currentOpenDropdown = resultsContainer;
+
+        resultsContainer.innerHTML = '';
+        options
+          .filter((option) => option.value)
+          .forEach((option) => {
+            const div = document.createElement('div');
+            div.textContent = option.text;
+            div.dataset.value = option.value;
+            div.addEventListener('click', () => selectOption(div));
+            resultsContainer.appendChild(div);
+          });
+        resultsContainer.style.display = 'block';
+      }
+
+      function filterOptions() {
+        const filter = searchField.value.toLowerCase();
+        resultsContainer.innerHTML = '';
+        options
+          .filter((option) => option.value && option.text.toLowerCase().includes(filter))
+          .forEach((option) => {
+            const div = document.createElement('div');
+            div.textContent = option.text;
+            div.dataset.value = option.value;
+            div.addEventListener('click', () => selectOption(div));
+            resultsContainer.appendChild(div);
+          });
+
+        resultsContainer.style.display =
+          resultsContainer.innerHTML.trim() === '' ? 'none' : 'block';
+      }
+
+      function selectOption(div) {
+        searchField.value = div.textContent;
+        searchSelect.value = div.dataset.value;
+        searchSelect.dataset.selected = "true";
+        searchField.setCustomValidity(""); // Clear any validation message
+        resultsContainer.style.display = 'none';
+        currentOpenDropdown = null;  // Clear current dropdown reference
+      }
+
+      // Show dropdown only when input is focused
+      searchField.addEventListener('focus', populateResults);
+
+      // Close dropdown on outside click
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('.dropdown-container')) {
+          resultsContainer.style.display = 'none';
+          currentOpenDropdown = null;  // Clear current dropdown reference
+        }
+      });
+    }
+
+    // Initialize all dropdowns
+    document.querySelectorAll('.dropdown-container').forEach((container) => {
+      initializeDropdown(container);
+    });
+  </script>

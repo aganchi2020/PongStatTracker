@@ -1,0 +1,170 @@
+@page
+@model PongStatTracker.Pages.LeaderboardModel
+@{
+}
+
+<div class="leaderboard-container">
+    <div class="leaderboard-welcome-text">
+        <p class="small-welcome">- leaderboard -</p>
+    </div>
+
+    <div class="main-leaderboard-container">
+        <h2 class="leaderboard-title">Overall Rankings</h2>
+        <div class="main-leaderboard">
+            <div class="leaderboard-header">
+                <span class="rank-col">Rank</span>
+                <span class="name-col">Name</span>
+                <span>Games</span>
+                <span>Win %</span>
+                <span>Sinks/Game</span>
+                <span>Hits/Game</span>
+                <span>Misses/Game</span>
+                <span>Game +/-</span>
+            </div>
+            @foreach (var player in Model.TopPlayers)
+            {
+                <div class="leaderboard-row">
+                    <span class="rank-col">@player.Rank</span>
+                    <span class="name-col">@player.Name</span>
+                    <span>@player.Games</span>
+                    <span class="@(player.WinPercentage >= 50 ? "positive-stat" : "negative-stat")">@player.WinPercentage%</span>
+                    <span class="@(player.WinPercentage >= 50 ? "positive-stat" : "negative-stat")">@player.SinksPerGame</span>
+                    <span class="@(player.WinPercentage >= 50 ? "positive-stat" : "negative-stat")">20</span>
+                    <span class="@(player.WinPercentage >= 50 ? "positive-stat" : "negative-stat")">20</span>
+                    <span class="@(player.PointDifferential >= 0 ? "positive-stat" : "negative-stat")">@player.PointDifferential</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <h2 class="stat-leaders-text">Stat Leaders</h2>
+    <h2 class="stat-leaders-text-small">(Min. 5 Games)</h2>
+
+    <div class="stat-leaderboards-container">
+        <div class="stat-leaderboard">
+            <h3>Games Played</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestGP.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestGP[i].PlayerName</span>
+                        <span class="value">@Model.HighestGP[i].GamesPlayed</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="stat-leaderboard">
+            <h3>Win %</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestWP.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestWP[i].PlayerName</span>
+                        <span class="value">@Math.Round(Model.HighestWP[i].WinPercentage,1)%</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="stat-leaderboard">
+            <h3>Game +/-</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestPM.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestPM[i].PlayerName</span>
+                        <span class="value">@Math.Round(Model.HighestPM[i].PlusMinus,1)</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="stat-leaderboards-container">
+        <div class="stat-leaderboard">
+            <h3>Total Sinks</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestTotalSinks.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestTotalSinks[i].PlayerName</span>
+                        <span class="value">@Model.HighestTotalSinks[i].TotalStat</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="stat-leaderboard">
+            <h3>Total Hits</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestTotalHits.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestTotalHits[i].PlayerName</span>
+                        <span class="value">@Model.HighestTotalHits[i].TotalStat</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="stat-leaderboard">
+            <h3>Total Misses</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestTotalMisses.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestTotalMisses[i].PlayerName</span>
+                        <span class="value">@Model.HighestTotalMisses[i].TotalStat</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="stat-leaderboards-container">
+        <div class="stat-leaderboard">
+            <h3>Sinks/Game</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestAvgSinks.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestAvgSinks[i].PlayerName</span>
+                        <span class="value">@Math.Round(Model.HighestAvgSinks[i].AverageStat,1)</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="stat-leaderboard">
+            <h3>Hits/Game</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestAvgHits.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestAvgHits[i].PlayerName</span>
+                        <span class="value">@Math.Round(Model.HighestAvgHits[i].AverageStat,1)</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="stat-leaderboard">
+            <h3>Misses/Game</h3>
+            <div class="mini-leaderboard">
+                @for (int i = 0; i < Math.Min(10, Model.HighestAvgMisses.Count); i++) {
+                    <div class="mini-leaderboard-row">
+                        <span class="rank">@((i+1))</span>
+                        <span class="name">@Model.HighestAvgMisses[i].PlayerName</span>
+                        <span class="value">@Math.Round(Model.HighestAvgMisses[i].AverageStat,1)</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+</div>

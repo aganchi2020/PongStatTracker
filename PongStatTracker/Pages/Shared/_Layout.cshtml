@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pong Stat Tracker</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PongStatTracker.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="header-main">
+                <div class="header-left">
+                    <a asp-page="Index"><img src="~/images/DkeLogo.png" alt="DKE Pong Logo"></a>
+                </div>
+                <div class="header-middle">
+                    <a class="middle-nav-links" asp-page="Brothers">Brothers</a>
+                    <a asp-page="Leaderboard">Leaderboard</a>
+                    @* <a asp-page="">Call Games</a>
+                    <a asp-page="">Recent Games</a> *@
+                    <a class="middle-nav-links" asp-page="Media">Media</a>
+                </div>
+                <div class="header-right">
+                    <a asp-page="SubmitStats">Submit Stats</a>
+                </div>
+            </div>
+            <div class="hr-container">
+                <hr class="header-line">
+            </div>
+        </div>
+    </header>
+
+    <div class="">
+        <main role="main" class="">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer-container">
+        <div class="hr-container">
+            <hr class="header-line">
+        </div>
+        <div class="footer-bottom-text">
+            &copy; 2024 - PongStatTracker</a>
+        </div>
+        <div>
+            <a>Contact Us</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,49 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="index-container">
+    @* <div class="index-picture-text-container">
+        <div class="index-picture">
+            <img src="~/images/DkeHouse.jpg" alt="Scenic image of the DKE House" >
+        </div>
+        <div class="index-text">
+            <p>DKE Pong Stat Tracker</p>
+
+        </div>
+    </div> *@
+    <div class="index-welcome-text">
+        <p class="small-welcome">- welcome -</p>
+        @* <h1 class="index-big-text">&nbsp;&nbsp;&nbsp;&nbsp; DKE Pong Stat Tracker &nbsp;&nbsp;&nbsp;&nbsp; See Who's The Best</h1> *@
+        <h1 class="index-big-text">Pong Stat Tracker</h1>
+        <p class="index-little-text">
+            After every game, enter your stats. Each brother has a profile that will track their 
+            performance throughout the semester, and the best players will make the leaderboard.
+        </p>
+    </div>
+    <div class="main-leaderboard-container">
+        <h2 class="leaderboard-title">Overall Rankings</h2>
+        <div class="main-leaderboard">
+            <div class="leaderboard-header">
+                <span class="rank-col">Rank</span>
+                <span class="name-col">Name</span>
+                <span>Games</span>
+                <span>Win %</span>
+                <span>Sinks/Game</span>
+                <span>Points +/-</span>
+            </div>
+            @foreach (var player in Model.TopPlayers)
+            {
+                <div class="leaderboard-row">
+                    <span class="rank-col">@player.Rank</span>
+                    <span class="name-col">@player.Name</span>
+                    <span>@player.Games</span>
+                    <span class="@(player.WinPercentage >= 50 ? "positive-stat" : "negative-stat")">@player.WinPercentage%</span>
+                    <span>@player.SinksPerGame</span>
+                    <span class="@(player.PointDifferential >= 0 ? "positive-stat" : "negative-stat")">@player.PointDifferential</span>
+                </div>
+            }
+        </div>
+</div>

@@ -1,0 +1,16 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="index-container">
+    <div class="error-page-text">
+        <h1 class="error-message-sorry">Sorry, something went wrong</h1>
+        <hr class="error-page-hr"/>
+        @* <h3 class="return-home-text">Click <a asp-page="Index">here</a> to return home</h3> *@
+        <div class="return-home-button">
+            <a asp-page="Index">Return Home</a>
+        </div>
+    </div>
+</div>

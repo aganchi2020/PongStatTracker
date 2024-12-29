@@ -1,0 +1,267 @@
+@page
+@model PongStatTracker.Pages.BrothersModel
+@{
+}
+
+<div class="brothers-page-container">
+    <div class="leaderboard-welcome-text">
+        <p class="small-welcome">- brothers -</p>
+    </div>
+    
+    <div class="brother-selection-container">
+        <form method="post" id="brotherForm" class="brother-dropdown-form">
+            @Html.AntiForgeryToken()
+            <div class="brother-dropdown-wrapper">
+                <input type="text" id="brotherSearch" class="brother-search" placeholder="Search brother..." autocomplete="off">
+                <select class="brother-dropdown" id="brotherSelect" name="SelectedBrother" size="6">
+                    @foreach(var brother in Model.BrotherList){
+                        @if(brother.Name == Model.SelectedBrother){
+                            <option value="@brother.Name" selected>@brother.Name</option>
+                        }
+                        else{
+                            <option value="@brother.Name">@brother.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="brother-profile-section">
+        <div class="profile-header">
+            @if(Model.ClearSearch){
+                <h2 class="profile-name">Select a Brother</h2>
+            }
+            else{
+                <h2 class="profile-name">@Model.SelectedBrother</h2>
+            }
+        </div>
+        <div class="profile-stats-container">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h4>Games Played</h4>
+                    @if(!Model.ClearSearch){
+                        <div class="stat-value">@Model.TotalGames</div>
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Win/Loss</h4>
+                    @if(!Model.ClearSearch){
+                        <div class="stat-value">@Model.GamesWon/@Model.GamesLost</div>
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Total Sinks</h4>
+                    @if(!Model.ClearSearch){
+                        <div class="stat-value">@Model.TotalSinks</div>
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Total Hits</h4>
+                    @if(!Model.ClearSearch){
+                        <div class="stat-value">@Model.TotalHits</div>
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Total Misses</h4>
+                    @if(!Model.ClearSearch){
+                        <div class="stat-value">@Model.TotalMisses</div>
+                    }
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h4>Avg Game +/-</h4>
+                    @if(!Model.ClearSearch){
+                        @if(Model.GamePlusMinus >= 5.5 && Model.TotalGames > 0){
+                            <div class="stat-value-green">@Model.GamePlusMinus.ToString("0.0")</div>
+                        }else if(Model.GamePlusMinus <= 2 && Model.TotalGames > 0){
+                            <div class="stat-value-red">@Model.GamePlusMinus.ToString("0.0")</div>
+                        }else{ 
+                            <div class="stat-value">@Model.GamePlusMinus.ToString("0.0")</div>
+                        }
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Win %</h4>
+                    @if(!Model.ClearSearch){
+                        @if(Model.WinPercent >= 70 && Model.TotalGames > 0){
+                            <div class="stat-value-green">@Model.WinPercent.ToString("0")%</div>
+                        }else if(Model.WinPercent <= 30 && Model.TotalGames > 0){
+                            <div class="stat-value-red">@Model.WinPercent.ToString("0")%</div>
+                        }else{  
+                            <div class="stat-value">@Model.WinPercent.ToString("0")%</div>
+                        }
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Sinks/Game</h4>
+                    @if(!Model.ClearSearch){
+                        @if(Model.SinksPerGame >= 3 && Model.TotalGames > 0){
+                            <div class="stat-value-green">@Model.SinksPerGame.ToString("0.0")</div>
+                        }else if(Model.SinksPerGame <= 1 && Model.TotalGames > 0){
+                            <div class="stat-value-red">@Model.SinksPerGame.ToString("0.0")</div>
+                        }else{ 
+                            <div class="stat-value">@Model.SinksPerGame.ToString("0.0")</div>
+                        }
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Hits/Game</h4>
+                    @if(!Model.ClearSearch){
+                        @if(Model.HitsPerGame >= 4 && Model.TotalGames > 0){
+                            <div class="stat-value-green">@Model.HitsPerGame.ToString("0.0")</div>
+                        }else if(Model.HitsPerGame <= 2 && Model.TotalGames > 0){
+                            <div class="stat-value-red">@Model.HitsPerGame.ToString("0.0")</div>
+                        }else{ 
+                            <div class="stat-value">@Model.HitsPerGame.ToString("0.0")</div>
+                        }
+                    }
+                </div>
+                <div class="stat-card">
+                    <h4>Misses/Game</h4>
+                    @if(!Model.ClearSearch){
+                        @if(Model.MissesPerGame <= 1.5 && Model.TotalGames > 0){
+                            <div class="stat-value-green">@Model.MissesPerGame.ToString("0.0")</div>
+                        }else if(Model.MissesPerGame >= 3.5 && Model.TotalGames > 0){
+                            <div class="stat-value-red">@Model.MissesPerGame.ToString("0.0")</div>
+                        }else{ 
+                            <div class="stat-value">@Model.MissesPerGame.ToString("0.0")</div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="recent-games-section">
+                <h3 class="text-align-center">Recent Games</h3>
+                <div class="games-list">
+                    @if(Model.ClearSearch == false){
+                        <div class="games-list-header">
+                            <span>Date</span>
+                            <span>Result</span>
+                            <span>Sinks</span>
+                            <span>Hits</span>
+                            <span>Misses</span>
+                            <span style="padding-left:10px;">Opponents</span>
+                        </div>
+                        @if(Model.BrotherGameList != null)
+                        {
+                            foreach(var game in Model.BrotherGameList){
+                                <div class="game-row">
+                                    <span>@game.GameDate.ToString("MM/dd/yyyy")</span>
+                                    <span class="@(game.WinYN == "Y" ? "win" : "loss")">@(game.WinYN == "Y" ? "Win" : "Loss")</span>
+                                    <span style="padding-left:14px; font-size:18px;">@game.Sinks</span>
+                                    <span style="padding-left:9px; font-size:18px;">@game.Hits</span>
+                                    <span style="padding-left:19px; font-size:18px;">@game.Misses</span>
+                                    <span class="opponent-column"> 
+                                        <span class="opponent-name">@game.Opponent1</span>
+                                        <span class="opponent-name">@game.Opponent2</span>
+                                    </span>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('brotherSearch');
+    const select = document.getElementById('brotherSelect');
+    const form = document.getElementById('brotherForm');
+    const allOptions = Array.from(select.options);
+
+    async function submitForm(selectedBrother) {
+        const formData = new FormData();
+        formData.append('SelectedBrother', selectedBrother);
+        
+        // Get the anti-forgery token
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        
+        try {
+            const response = await fetch('Brothers', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                body: formData
+            });
+            
+            if (response.ok) {
+                const html = await response.text();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                
+                // Update only the profile section
+                const newProfile = tempDiv.querySelector('.brother-profile-section');
+                document.querySelector('.brother-profile-section').innerHTML = newProfile.innerHTML;
+                
+                // Reset dropdown while preserving selected state
+                select.innerHTML = '';
+                allOptions.forEach(option => {
+                    const newOption = option.cloneNode(true);
+                    if (newOption.value === selectedBrother) {
+                        newOption.selected = true;
+                    }
+                    select.add(newOption);
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    searchInput.addEventListener('input', function(e) {
+        const searchText = e.target.value.toLowerCase();
+        
+        // Filter options   
+        const filteredOptions = allOptions.filter(option => 
+            option.text.toLowerCase().includes(searchText)
+        );
+
+        // Clear and rebuild select options
+        select.innerHTML = '';
+        filteredOptions.forEach(option => select.add(option));
+        
+        // Show dropdown when typing
+        select.style.display = 'block';
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (select.options.length > 0) {
+                select.selectedIndex = 0;
+                submitForm(select.value);
+            }
+        }
+    });
+
+    // Handle option selection
+    select.addEventListener('change', function(e) {
+        select.style.display = 'none';
+        searchInput.value = '';  // Clear the search input
+        submitForm(this.value);
+    });
+
+    // Prevent form from submitting normally
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !select.contains(e.target)) {
+            select.style.display = 'none';
+        }
+    });
+
+    // Show dropdown when focusing on search input
+    searchInput.addEventListener('focus', function() {
+        select.style.display = 'block';
+    });
+});
+</script>
+
